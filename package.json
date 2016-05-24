@@ -22,7 +22,8 @@
   "dependencies": {
     "express": "^4.13.4",
     "mongodb-migrations": "^0.5.1",
-    "mongoose": "^4.4.19"
+    "mongoose": "^4.4.19",
+    "pg": "^4.5.5"
   },
   "engine": {
     "node": "6.2.0"

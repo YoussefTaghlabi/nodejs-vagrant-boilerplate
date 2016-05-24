@@ -87,6 +87,9 @@ msg "--------------------------------------------------"
         # We have to add the MongoDB repository details so APT will know where to download the packages from
         echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list > /dev/null 2>&1
 
+        msg  "    Create an APT list file for postgresql"
+        sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list' > /dev/null 2>&1
+        sudo wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add - > /dev/null 2>&1
 
 # Updating all the packages
         msg  "    Updating packages"
@@ -135,10 +138,47 @@ msg "--------------------------------------------------"
         sudo apt-get install mongodb-org -y > /dev/null 2>&1
 
         #  comment out the bind_ip line from /etc/mongod.conf to listen to all interfaces
-        sudo cp /vagrant/provision/files/mongod.conf /etc/mongod.conf
+        sudo cp /vagrant/provision/files/mongodb/mongod.conf /etc/mongod.conf
 
         # Restart Service to reflect the new config file
         sudo service mongod restart > /dev/null 2>&1
+
+# postgresql
+    msg  "    Installing postgresql"
+        sudo apt-get install -y postgresql-client-9.5 postgresql-common postgresql-9.5 postgresql-server-dev-9.5 postgresql-contrib > /dev/null 2>&1
+
+            msg  "        Set custom postgresql.conf file"
+            # Make require enhancements to listen to all ports
+            # Changed listen_addresses to "*"
+            sudo cp /vagrant/provision/files/postgresql/postgresql.conf /etc/postgresql/9.5/main/postgresql.conf
+
+            msg  "        Set custom pg_hba.conf file"
+            # Make require enhancements to connect to postgresql from the host machine
+            # Create a new row with the following 5 columns: host all all all password
+            sudo cp /vagrant/provision/files/postgresql/pg_hba.conf /etc/postgresql/9.5/main/pg_hba.conf
+
+            msg  "        Set up pgdbhost"
+            echo "10.0.0.3 pgdbhost" | sudo tee -a /etc/hosts > /dev/null 2>&1
+
+            msg  "        Set password for user postgres"
+            sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+
+            msg  "          Restarting postgresql"
+            sudo service postgresql restart > /dev/null
+            # sudo lsof -i -n -P | more
+            while ! pgrep "postgresql" > /dev/null;
+            do
+                    sleep 6
+                    sudo service postgresql restart > /dev/null
+                    printf "$RED"  "        Waiting for postgresql service...Retry in 5s"
+            done
+            printf "$GREEN"  "        postgresql service Restarted!"
+
+            msg  "        Create db mydb"
+            createdb -h pgdbhost -U postgres -O postgres mydb
+
+            msg  "        Grant all privileges to admin user on mydb"
+            sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE mydb to postgres;"
 
 # Npm
     msg  "Installing npm modules"
