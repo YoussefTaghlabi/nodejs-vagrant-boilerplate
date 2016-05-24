@@ -71,8 +71,8 @@ msg "--------------------------------------------------"
 
 # Bashrc
     msg  "Set profile AND .bashrc FILES"
-        sudo cp /vagrant/provision/dev/files/profile/profile /etc/.
-        sudo cp /vagrant/provision/dev/files/profile/bash.bashrc /home/vagrant/.bashrc
+        sudo cp /vagrant/provision/files/profile/profile /etc/.
+        sudo cp /vagrant/provision/files/profile/bash.bashrc /home/vagrant/.bashrc
 
 # To speed things up, anything that requires an apt-get update is done here
     msg  "Preping Packages that require an apt-get update"
@@ -135,7 +135,7 @@ msg "--------------------------------------------------"
         sudo apt-get install mongodb-org -y > /dev/null 2>&1
 
         #  comment out the bind_ip line from /etc/mongod.conf to listen to all interfaces
-        sudo cp /vagrant/provision/dev/files/mongod.conf /etc/mongod.conf
+        sudo cp /vagrant/provision/files/mongod.conf /etc/mongod.conf
 
         # Restart Service to reflect the new config file
         sudo service mongod restart > /dev/null 2>&1
