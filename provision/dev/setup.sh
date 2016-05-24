@@ -35,7 +35,7 @@ function checkIfFileExists {
     fi
 }
 
-function checkIfDirectorgExists {
+function checkIfDirectoryExists {
     if [ -d $1 ];
     then
         printf "$GREEN" "           $1 exists...[YES]"
@@ -137,6 +137,9 @@ msg "--------------------------------------------------"
         #  comment out the bind_ip line from /etc/mongod.conf to listen to all interfaces
         sudo cp /vagrant/provision/dev/files/mongod.conf /etc/mongod.conf
 
+        # Restart Service to reflect the new config file
+        sudo service mongod restart > /dev/null 2>&1
+
 # Npm
     msg  "Installing npm modules"
         cd /vagrant/
@@ -149,8 +152,8 @@ msg "--------------------------------------------------"
         checkIfProcessIsRunning "mongod"
 
         msg  "  Check Directories"
-        msg  "      Profile"
-        checkIfFileExists "/vagrant/node_modules"
+        msg  "      node_modules"
+        checkIfDirectoryExists "/vagrant/node_modules"
 
         msg  "      NodeJs Version"
         nodejs -v
@@ -159,9 +162,13 @@ msg "--------------------------------------------------"
         npm -v
 
 
-msg "--------------------------------------------------"
-msg "Your vagrant instance is running at: 10.0.0.2"
+# Start node
+    msg  "Start Server"
+        node server.js
 
+
+msg "--------------------------------------------------"
+msg "Your vagrant instance is running at: 10.0.0.3"
 
 
 
