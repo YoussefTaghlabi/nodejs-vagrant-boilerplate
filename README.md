@@ -1,6 +1,13 @@
 NodeJs & Vagrant Boilerplate
 ============================
 
+What you get
+-------------
+
+* NodeJs    6.0.2
+* Npm       3.8.9
+* MongoDb   3.0.12
+
 Requirements
 ------------
 
@@ -12,11 +19,7 @@ Installation
 -------------
 
 * ```vagrant up```
+* ```vagrant ssh```
 
-What you get
--------------
 
-* NodeJs    6.0.2
-* Npm       3.8.9
-* MongoDb   3.0.12
 

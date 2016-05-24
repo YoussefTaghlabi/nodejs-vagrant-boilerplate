@@ -135,12 +135,12 @@ msg "--------------------------------------------------"
         sudo apt-get install mongodb-org -y > /dev/null 2>&1
 
         #  comment out the bind_ip line from /etc/mongod.conf to listen to all interfaces
-        sudo cp /vagrant/provision/dev/mongod.conf /etc/mongod.conf
+        sudo cp /vagrant/provision/dev/files/mongod.conf /etc/mongod.conf
 
 # Npm
     msg  "Installing npm modules"
         cd /vagrant/
-        npm install -y > /dev/null 2>&1
+        npm install
 
 
 # Check if Services are running, and proper files exist
