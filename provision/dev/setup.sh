@@ -143,7 +143,7 @@ msg "--------------------------------------------------"
 # Npm
     msg  "Installing npm modules"
         cd /vagrant/
-        npm install
+        npm install > /dev/null 2>&1
 
 
 # Check if Services are running, and proper files exist
@@ -160,11 +160,6 @@ msg "--------------------------------------------------"
 
         msg  "      Npm version"
         npm -v
-
-
-# Start node
-    msg  "Start Server"
-        node server.js
 
 
 msg "--------------------------------------------------"
