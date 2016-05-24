@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
 
 ############################
-# DEVELOPMENT SETUP SCRIPT #
+# SETUP SCRIPT #
 ############################
-
-# In order to avoid the message
-# "==> default: dpkg-preconfigure: unable to re-open stdin: No such file or directory"
-# use " > /dev/null 2>&1" to redirect stdout to /dev/null
-# For more info see http://stackoverflow.com/questions/10508843/what-is-dev-null-21
 
 # Variables
 RED="\e[1;31m%-6s\e[m\n"
@@ -33,6 +28,15 @@ function checkIfProcessIsRunning {
 
 function checkIfFileExists {
     if [ -f $1 ];
+    then
+        printf "$GREEN" "           $1 exists...[YES]"
+    else
+        printf "$RED" "           $1 exists...[NO]"
+    fi
+}
+
+function checkIfDirectorgExists {
+    if [ -d $1 ];
     then
         printf "$GREEN" "           $1 exists...[YES]"
     else
@@ -133,11 +137,20 @@ msg "--------------------------------------------------"
         #  comment out the bind_ip line from /etc/mongod.conf to listen to all interfaces
         sudo cp /vagrant/provision/dev/mongod.conf /etc/mongod.conf
 
+# Npm
+    msg  "Installing npm modules"
+        cd /vagrant/
+        npm install -y > /dev/null 2>&1
+
 
 # Check if Services are running, and proper files exist
     msg  "Sanity Check"
         msg  "  Check Services"
         checkIfProcessIsRunning "mongod"
+
+        msg  "  Check Directories"
+        msg  "      Profile"
+        checkIfFileExists "/vagrant/node_modules"
 
         msg  "      NodeJs Version"
         nodejs -v
