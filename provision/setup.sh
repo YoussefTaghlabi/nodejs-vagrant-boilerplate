@@ -163,16 +163,8 @@ msg "--------------------------------------------------"
             msg  "        Set password for user postgres"
             sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
 
-            msg  "          Restarting postgresql"
+            msg  "        Restarting postgresql"
             sudo service postgresql restart > /dev/null
-            # sudo lsof -i -n -P | more
-            while ! pgrep "postgresql" > /dev/null;
-            do
-                    sleep 6
-                    sudo service postgresql restart > /dev/null
-                    printf "$RED"  "        Waiting for postgresql service...Retry in 5s"
-            done
-            printf "$GREEN"  "        postgresql service Restarted!"
 
             msg  "        Create db mydb"
             createdb -h pgdbhost -U postgres -O postgres mydb
@@ -190,6 +182,7 @@ msg "--------------------------------------------------"
     msg  "Sanity Check"
         msg  "  Check Services"
         checkIfProcessIsRunning "mongod"
+        checkIfProcessIsRunning "postgresql"
 
         msg  "  Check Directories"
         msg  "      node_modules"
