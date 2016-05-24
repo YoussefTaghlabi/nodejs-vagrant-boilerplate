@@ -21,12 +21,19 @@ Installation
 * ```vagrant up```
 
 Post-Installation
--------------
+-----------------
 
 * ```vagrant ssh```
 * ```node server.js```
 
 Your node instance should be running onr port 3000: http://10.0.0.3:3000
+
+RoboMongo
+-----------------
+
+Once RoboMongo is downloaded, you can connect to your mongodb instance vis host 10.0.0.3, port 27017
+
+
 
 
 
