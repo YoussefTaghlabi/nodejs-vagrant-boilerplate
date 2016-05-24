@@ -33,6 +33,8 @@ RoboMongo
 
 Once RoboMongo is downloaded, you can connect to your mongodb instance vis host 10.0.0.3, port 27017
 
+![alt tag](https://raw.githubusercontent.com/YoussefTaghlabi/nodejs-vagrant-boilerplate/master/screenShots/mongod.png)
+
 
 
 
