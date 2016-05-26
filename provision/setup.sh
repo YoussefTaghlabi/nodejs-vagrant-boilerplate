@@ -177,6 +177,10 @@ msg "--------------------------------------------------"
         cd /vagrant/
         npm install > /dev/null 2>&1
 
+# Azure Cli
+    msg  "Installing azure-cli globally"
+    sudo npm install -g azure-cli
+
 
 # Check if Services are running, and proper files exist
     msg  "Sanity Check"
