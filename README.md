@@ -42,7 +42,7 @@ Once RoboMongo is downloaded, you can connect to your mongodb instance via host 
 PGAdmin
 -----------------
 
-Once PGAdmin is downloaded, you can connect to your mongodb instance via:
+Once PGAdmin is downloaded, you can connect to your PostGresql instance via:
 * host 10.0.0.3
 * port 5432
 * username postgres
