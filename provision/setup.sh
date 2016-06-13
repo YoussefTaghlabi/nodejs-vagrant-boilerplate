@@ -91,6 +91,9 @@ msg "--------------------------------------------------"
         sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list' > /dev/null 2>&1
         sudo wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add - > /dev/null 2>&1
 
+        msg  "    Getting PPA's"
+        sudo add-apt-repository ppa:ondrej/mysql-5.6 -y > /dev/null 2>&1
+
 # Updating all the packages
         msg  "    Updating packages"
         sudo apt-get update -y > /dev/null 2>&1
@@ -172,6 +175,30 @@ msg "--------------------------------------------------"
             msg  "        Grant all privileges to admin user on mydb"
             sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE mydb to postgres;"
 
+# MySQL 5.6
+    msg  "Installing Mysql Server 5.6"
+        msg  "    Set custom configuration"
+        sudo mkdir -p /etc//mysql
+        sudo cp /vagrant/provision/files/mysql/my.cnf /etc/mysql/my.cnf
+
+        msg  "    Installing Mysql Server 5.6"
+        # Bypass password prompt
+        echo "mysql-server-5.6 mysql-server/root_password password root" | sudo debconf-set-selections
+        echo "mysql-server-5.6 mysql-server/root_password_again password root" | sudo debconf-set-selections
+        sudo apt-get install mysql-server-5.6 -y > /dev/null 2>&1
+
+        msg  "    Start service"
+        while ! nc -vz localhost 3306 > /dev/null 2>&1;
+        do
+                sleep 3
+                sudo service mysql restart > /dev/null 2>&1
+                printf "$RED"  "        Waiting for MySql service on port 3306...Retry in 5s"
+        done
+        printf "$GREEN"  "        MySql service Restarted!"
+
+        msg  "    Setting password"
+        sudo mysqladmin -uroot -proot password root > /dev/null 2>&1
+
 # Npm
     msg  "Installing npm modules"
         cd /vagrant/
@@ -187,6 +214,7 @@ msg "--------------------------------------------------"
         msg  "  Check Services"
         checkIfProcessIsRunning "mongod"
         checkIfProcessIsRunning "postgresql"
+        checkIfProcessIsRunning "mysql"
 
         msg  "  Check Directories"
         msg  "      node_modules"
